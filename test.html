@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Connection Test</title>
+</head>
+<body>
+    <h1>Backend Connection Test</h1>
+    <button onclick="testConnection()">Test Backend Connection</button>
+    <div id="result"></div>
+
+    <script>
+        async function testConnection() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+
+            try {
+                // Test health endpoint
+                const response = await fetch('http://localhost:5001/health', {
+                    mode: 'cors'
+                });
+
+                if (response.ok) {
+                    const text = await response.text();
+                    resultDiv.innerHTML = `<p style="color: green;">✓ Backend is accessible: ${text}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">✗ Backend returned: ${response.status} ${response.statusText}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">✗ Connection failed: ${error.message}</p>`;
+                console.error('Connection error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
