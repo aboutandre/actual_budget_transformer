@@ -40,6 +40,15 @@ docker-compose up
 
 The app runs at `http://localhost:42046`.
 
+To build the image directly:
+
+```bash
+cd frontend
+docker build -t my-app:latest .
+```
+
+> **Note (2026-03-08):** `react-scripts@5.0.1` does not support TypeScript 5. The Dockerfile uses `npm install --legacy-peer-deps` to work around this peer dependency conflict.
+
 ## Tech Stack
 
 - React 19 + TypeScript
