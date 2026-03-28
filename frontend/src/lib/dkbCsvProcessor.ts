@@ -49,16 +49,36 @@ function transformDate(dateStr: string): string {
 function parseAmount(amountStr: string): number {
   if (!amountStr.trim()) return 0;
   
-  // Detect format: if it contains a comma, assume German format (1.234,56)
-  // Otherwise assume standard format (1234.56 or -16.42)
+  const trimmed = amountStr.trim();
   let normalized: string;
   
-  if (amountStr.includes(",")) {
-    // German format: "1.234,56" → remove dots, replace comma with dot
-    normalized = amountStr.replace(/\./g, "").replace(",", ".");
+  const hasPeriod = trimmed.includes(".");
+  const hasComma = trimmed.includes(",");
+  
+  if (hasComma && hasPeriod) {
+    // German format with both: 1.234,56 → remove dots, replace comma with dot
+    normalized = trimmed.replace(/\./g, "").replace(",", ".");
+  } else if (hasComma) {
+    // German format with only comma: 1,5 → replace comma with dot
+    normalized = trimmed.replace(",", ".");
+  } else if (hasPeriod) {
+    // Could be either format - check position of last period
+    const lastPeriodIndex = trimmed.lastIndexOf(".");
+    const digitsAfterPeriod = trimmed.length - lastPeriodIndex - 1;
+    
+    if (digitsAfterPeriod === 3) {
+      // Likely German thousands separator: 1.000 → remove period
+      normalized = trimmed.replace(/\./g, "");
+    } else if (digitsAfterPeriod <= 2) {
+      // Likely standard decimal separator: 1.5 or 1.50
+      normalized = trimmed;
+    } else {
+      // More than 3 decimals - treat as standard decimal
+      normalized = trimmed;
+    }
   } else {
-    // Standard format: already correct
-    normalized = amountStr.trim();
+    // No separators
+    normalized = trimmed;
   }
   
   const val = parseFloat(normalized);
