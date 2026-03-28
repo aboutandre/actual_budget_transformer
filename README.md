@@ -1,6 +1,6 @@
 # Actual Budget Transformer
 
-A browser-based tool that converts CSV exports from **Deutsche Kreditbank (DKB)** into the CSV format used by [Actual Budget](https://actualbudget.com/).
+A browser-based tool that converts CSV exports from **Deutsche Kreditbank (DKB)** and **Deutsche Bank** credit cards into the CSV format used by [Actual Budget](https://actualbudget.com/).
 
 All processing happens client-side — your data never leaves your browser.
 
@@ -9,16 +9,28 @@ All processing happens client-side — your data never leaves your browser.
 - Drag & drop CSV upload
 - Automatic download of the transformed file
 - Handles DKB checking, credit card, and savings account exports
+- Handles Deutsche Bank credit card exports
 - Converts German date and number formats to Actual Budget's expected format
 
-## How It Works
+## Supported Formats
 
-| DKB Export            | Actual Budget                                  |
-| --------------------- | ---------------------------------------------- |
-| Semicolon-delimited   | Comma-delimited                                |
-| `dd.MM.yyyy` dates    | `yyyy-MM-dd` dates                             |
-| `1.234,56` amounts    | `1234.56` with separate Inflow/Outflow columns |
-| German column headers | `Date`, `Payee`, `Notes`, `Outflow`, `Inflow`  |
+The processor automatically detects and handles:
+
+| Source                    | Format                              | Date Format           | Number Format     |
+| ------------------------- | ----------------------------------- | --------------------- | ----------------- |
+| DKB Checking Account      | Semicolon-delimited, column headers | dd.MM.yyyy (dd.MM.yy) | German (1.234,56) |
+| DKB Credit Card           | Semicolon-delimited, column headers | dd.MM.yyyy (dd.MM.yy) | German (1.234,56) |
+| DKB Savings Account       | Semicolon-delimited, column headers | dd.MM.yyyy (dd.MM.yy) | German (1.234,56) |
+| Deutsche Bank Credit Card | Semicolon-delimited, Excel export   | M/D/YYYY              | Standard (16.42)  |
+
+## Transformation Details
+
+| DKB Export              | Actual Budget                                  |
+| ----------------------- | ---------------------------------------------- |
+| Semicolon-delimited     | Comma-delimited                                |
+| Various date formats    | `yyyy-MM-dd` dates                             |
+| German/Standard amounts | `1234.56` with separate Inflow/Outflow columns |
+| German column headers   | `Date`, `Payee`, `Notes`, `Outflow`, `Inflow`  |
 
 ## Getting Started
 
